@@ -39,6 +39,8 @@ async function initialLoad() {
       option.textContent = breed.name;
       breedSelect.appendChild(option);
     });
+    var id = breedSelect.options[0].value;
+    updateCarousel(id);
   } catch (error) {
     console.error('Error fetching breeds:', error);
   }
@@ -47,31 +49,61 @@ async function initialLoad() {
 // This function should execute immediately.
 document.addEventListener("DOMContentLoaded", (evt) => {
   initialLoad();
+
   console.log("DOM fully Loaded and Parsed");
 });
 //......................................................................
 //2. Create an event handler for breedSelect that does the following: 
- 
-async function onslectBreed(evt){
+
+async function onslectBreed(evt) {
   // get the selected value 
-const id=evt.target.value;
-// Make sure your request is receiving multiple array items!
-// getting filtered data by Id
-//- Retrieve information on the selected breed from the cat API using fetch().
-const result =await fetch(`https://api.thecatapi.com/v1/breeds/search?q=${id}`);
-const breeds = await result.json();
+  const id = evt.target.value;
+  // Make sure your request is receiving multiple array items!
+  updateCarousel(id);
 }
 //Check the API documentation if you're only getting a single object.
 const input = document.getElementById('breedSelect');
-input.addEventListener("change",onslectBreed)
+input.addEventListener("change", onslectBreed)
 console.log(input);
-//For each object in the response array, create a new element for the carousel.
-// Append each of these new elements to the carousel.
+
 //Use the other data you have been given to create an informational section within the infoDump element.
+async function fetchCatData(catBreed) {
+  // getting filtered data by Id
+  // Retrieve information on the selected breed from the cat API using fetch().
+  return fetch(`https://api.thecatapi.com/v1/breeds/search?q=${catBreed}`)
+    .then(response => response.json())
+    .then(data => data);
+}
+// Each new selection should clear, re-populate, and restart the Carousel.
+function updateCarousel(breed) {
+  const carousel = document.querySelector('.carousel');
+  carousel.innerHTML = ''; // Clear existing carousel items
+  fetchCatData(breed)
+    .then(data => {
+      //For each object in the response array, creating a new element for the carousel.
+      data.forEach(cat => {
+        // const carouselItem = createCarouselItem(cat);
+        getCatImageData(cat.reference_image_id)
+          .then(data => {
+          const resimg = data;
+            const carouselItem = Carousel.createCarouselItem(resimg.url, "", resimg.id)
+            carousel.appendChild(carouselItem);
+          });
+      });
+    });
+}
+async function getCatImageData(imgID) {
+  return fetch(`https://api.thecatapi.com/v1/images/${imgID}`)
+    .then(response => response.json())
+    .then(data => data);
+}
+const breedimgselect=document.getElementById('breedSelect');
+// document.getElementById('breedSelect').addEventListener('change', onslectBreed);
+breedimgselect.addEventListener('change', onslectBreed);
+
 // Be creative with how you create DOM elements and HTML.
 // Feel free to edit index.html and styles.css to suit your needs, but be careful!
 // Remember that functionality comes first, but user experience and design are important.
-// Each new selection should clear, re-populate, and restart the Carousel.
 //Add a call to this function to the end of your initialLoad function above to create the initial carousel.
 
 
