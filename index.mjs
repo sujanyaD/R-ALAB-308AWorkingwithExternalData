@@ -53,18 +53,18 @@ document.addEventListener("DOMContentLoaded", (evt) => {
 //2. Create an event handler for breedSelect that does the following: 
  
 async function onslectBreed(evt){
+  // get the selected value 
 const id=evt.target.value;
+// Make sure your request is receiving multiple array items!
 // getting filtered data by Id
 //- Retrieve information on the selected breed from the cat API using fetch().
-const result =await fetch('https://api.thecatapi.com/v1/images/search?breed_ids= ${id}');
+const result =await fetch(`https://api.thecatapi.com/v1/breeds/search?q=${id}`);
 const breeds = await result.json();
 }
+//Check the API documentation if you're only getting a single object.
 const input = document.getElementById('breedSelect');
 input.addEventListener("change",onslectBreed)
-
-
-// Make sure your request is receiving multiple array items!
-//Check the API documentation if you're only getting a single object.
+console.log(input);
 //For each object in the response array, create a new element for the carousel.
 // Append each of these new elements to the carousel.
 //Use the other data you have been given to create an informational section within the infoDump element.
