@@ -1,6 +1,5 @@
 import * as Carousel from "./carousel.mjs";
 // import axios from "axios";
-
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
 // The information section div element.
@@ -43,17 +42,27 @@ async function initialLoad() {
   } catch (error) {
     console.error('Error fetching breeds:', error);
   }
+
 }
 // This function should execute immediately.
 document.addEventListener("DOMContentLoaded", (evt) => {
   initialLoad();
   console.log("DOM fully Loaded and Parsed");
 });
-
-
-
-//2. Create an event handler for breedSelect that does the following:
+//......................................................................
+//2. Create an event handler for breedSelect that does the following: 
+ 
+async function onslectBreed(evt){
+const id=evt.target.value;
+// getting filtered data by Id
 //- Retrieve information on the selected breed from the cat API using fetch().
+const result =await fetch('https://api.thecatapi.com/v1/images/search?breed_ids= ${id}');
+const breeds = await result.json();
+}
+const input = document.getElementById('breedSelect');
+input.addEventListener("change",onslectBreed)
+
+
 // Make sure your request is receiving multiple array items!
 //Check the API documentation if you're only getting a single object.
 //For each object in the response array, create a new element for the carousel.
