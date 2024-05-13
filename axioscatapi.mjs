@@ -65,11 +65,11 @@ async function handleBreedSelectWithAxios(event) {
         // Creating carousel item
         const carouselItem = document.createElement('div');
         carouselItem.classList.add('carousel-item');
-
-        // Create image element
+        //creating image element by using create element
         const image = document.createElement('img');
         image.src = cat.url;
         image.alt = cat.breeds[0].name; 
+        // appending image to casrousel element 
         carouselItem.appendChild(image);
 
         // Append carousel item to carousel
