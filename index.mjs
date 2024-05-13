@@ -23,7 +23,7 @@ axios(" https://api.thecatapi.com/v1/images/search")
   );
 // 1. Create an async function "initialLoad" that does the following:
 async function initialLoad() {
-  try {
+ 
     //   Retrieve a list of breeds from the cat API using fetch().
     const response = await fetch('https://api.thecatapi.com/v1/breeds');
     const breeds = await response.json();
@@ -39,14 +39,10 @@ async function initialLoad() {
       option.textContent = breed.name;
       breedSelect.appendChild(option);
     });
-    var id = breedSelect.options[0].value;
+    const id = breedSelect.options[0].value;
     updateCarousel(id);
-  } catch (error) {
-    console.error('Error fetching breeds:', error);
-  }
-
-}
-// This function should execute immediately.
+  } 
+ // This function should execute immediately.
 document.addEventListener("DOMContentLoaded", (evt) => {
   initialLoad();
 
@@ -54,12 +50,12 @@ document.addEventListener("DOMContentLoaded", (evt) => {
 });
 //......................................................................
 //2. Create an event handler for breedSelect that does the following: 
-
 async function onslectBreed(evt) {
   // get the selected value 
-  const id = evt.target.value;
+  // const id = evt.target.value;
+  const selectedText = evt.target.options[evt.target.selectedIndex].text;
   // Make sure your request is receiving multiple array items!
-  updateCarousel(id);
+  updateCarousel(selectedText);
 }
 //Check the API documentation if you're only getting a single object.
 const input = document.getElementById('breedSelect');
@@ -70,36 +66,49 @@ console.log(input);
 async function fetchCatData(catBreed) {
   // getting filtered data by Id
   // Retrieve information on the selected breed from the cat API using fetch().
-  return fetch(`https://api.thecatapi.com/v1/breeds/search?q=${catBreed}`)
-    .then(response => response.json())
-    .then(data => data);
+//  await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=${catBreed}`);
+
+  // return fetch(`https://api.thecatapi.com/v1/breeds/search?q=${catBreed}`)
+  return fetch(`https://api.thecatapi.com/v1/breeds/search?q=${catBreed}&attach_image=1`)
+  .then(response => response.json())
+  .then(data => data);
 }
-// Each new selection should clear, re-populate, and restart the Carousel.
 function updateCarousel(breed) {
   const carousel = document.querySelector('.carousel');
-  carousel.innerHTML = ''; // Clear existing carousel items
+  const carouselInner = document.getElementById('carouselInner')
+  // Each new selection should clear, re-populate, and restart the Carousel.
+ Carousel.clear();
+ 
   fetchCatData(breed)
     .then(data => {
       //For each object in the response array, creating a new element for the carousel.
       data.forEach(cat => {
-        // const carouselItem = createCarouselItem(cat);
         getCatImageData(cat.reference_image_id)
           .then(data => {
-          const resimg = data;
-            const carouselItem = Carousel.createCarouselItem(resimg.url, "", resimg.id)
+            const resimg = data;
+            const carouselItem = Carousel.createCarouselItem(resimg.url, "no image", resimg.id)
             carousel.appendChild(carouselItem);
+            carouselInner.appendChild(carouselItem);
           });
       });
     });
 }
+// gfetching images by passing imageid 
 async function getCatImageData(imgID) {
   return fetch(`https://api.thecatapi.com/v1/images/${imgID}`)
     .then(response => response.json())
     .then(data => data);
 }
-const breedimgselect=document.getElementById('breedSelect');
+
+const breedimgselect = document.getElementById('breedSelect');
 // document.getElementById('breedSelect').addEventListener('change', onslectBreed);
 breedimgselect.addEventListener('change', onslectBreed);
+
+//To practice posting data, we'll create a system to "favourite" certain images.
+ //This function is used within Carousel.js to add the event listener as items are created.
+const favouriteButton = document.querySelector('.favourite-button');
+favouriteButton.addEventListener('click',favourite(imgID));
+
 
 // Be creative with how you create DOM elements and HTML.
 // Feel free to edit index.html and styles.css to suit your needs, but be careful!
@@ -111,15 +120,7 @@ breedimgselect.addEventListener('change', onslectBreed);
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
  */
 /**
- * 4. Change all of your fetch() functions to axios!
- * - axios has already been imported for you within index.js.
- * - If you've done everything correctly up to this point, this should be simple.
- * - If it is not simple, take a moment to re-evaluate your original code.
- * - Hint: Axios has the ability to set default headers. Use this to your advantage
- *   by setting a default header with your API key so that you do not have to
- *   send it manually with all of your requests! You can also set a default base URL!
- */
-/**
+ * 
  * 5. Add axios interceptors to log the time between request and response to the console.
  * - Hint: you already have access to code that does this!
  * - Add a console.log statement to indicate when requests begin.
@@ -148,18 +149,21 @@ breedimgselect.addEventListener('change', onslectBreed);
  * - In your response interceptor, remove the progress cursor style from the body element.
  */
 /**
- * 8. To practice posting data, we'll create a system to "favourite" certain images.
- * - The skeleton of this function has already been created for you.
- * - This function is used within Carousel.js to add the event listener as items are created.
- *  - This is why we use the export keyword for this function.
+ 
  * - Post to the cat API's favourites endpoint with the given ID.
  * - The API documentation gives examples of this functionality using fetch(); use Axios!
  * - Add additional logic to this function such that if the image is already favourited,
  *   you delete that favourite using the API, giving this function "toggle" functionality.
  * - You can call this function by clicking on the heart at the top right of any image.
  */
+
+//* 8.To practice posting data, we'll create a system to "favourite" certain images.
+//The skeleton of this function has already been created for you.
+// This is why we use the export keyword for this function.
 export async function favourite(imgId) {
   // your code here
+  
+  console.log("favourite button clicked");
 }
 
 /**
