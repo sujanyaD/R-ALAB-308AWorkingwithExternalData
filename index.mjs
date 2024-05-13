@@ -1,5 +1,5 @@
 import * as Carousel from "./carousel.mjs";
-// import axios from "axios";
+//import axios from "axios";
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
 // The information section div element.
@@ -7,8 +7,8 @@ const infoDump = document.getElementById("infoDump");
 // The progress bar div element.
 const progressBar = document.getElementById("progressBar");
 // The get favourites button element.
-const getFavouritesBtn = document.getElementById("getFavouritesBtn");
-
+// const getFavouritesBtn = document.getElementById("getFavouritesBtn");
+axios.defaults.headers.common['x-api-key'] = "live_VZ7H6vgqwRXJc8QPVY1YNJF8PzbET8Q0pSK2vnVsmEQz5PxBbE0bOScu6363mzQJ";
 // Step 0: Store your API key here for reference and easy access.
 const API_KEY = "live_VZ7H6vgqwRXJc8QPVY1YNJF8PzbET8Q0pSK2vnVsmEQz5PxBbE0bOScu6363mzQJ";
 axios(" https://api.thecatapi.com/v1/images/search")
@@ -23,26 +23,26 @@ axios(" https://api.thecatapi.com/v1/images/search")
   );
 // 1. Create an async function "initialLoad" that does the following:
 async function initialLoad() {
- 
-    //   Retrieve a list of breeds from the cat API using fetch().
-    const response = await fetch('https://api.thecatapi.com/v1/breeds');
-    const breeds = await response.json();
-    // Select the breed dropdown
-    const breedSelect = document.getElementById('breedSelect');
-    // Create new <options> for each breed and append them to breedSelect
-    breeds.forEach(breed => {
-      //popultion option from dropdown
-      const option = document.createElement('option');
-      //Each option should have a value attribute equal to the id of the breed.
-      option.value = breed.id;
-      //   Each option should display text equal to the name of the breed.
-      option.textContent = breed.name;
-      breedSelect.appendChild(option);
-    });
-    const id = breedSelect.options[0].value;
-    updateCarousel(id);
-  } 
- // This function should execute immediately.
+
+  //   Retrieve a list of breeds from the cat API using fetch().
+  const response = await fetch('https://api.thecatapi.com/v1/breeds');
+  const breeds = await response.json();
+  // Select the breed dropdown
+  const breedSelect = document.getElementById('breedSelect');
+  // Create new <options> for each breed and append them to breedSelect
+  breeds.forEach(breed => {
+    //popultion option from dropdown
+    const option = document.createElement('option');
+    //Each option should have a value attribute equal to the id of the breed.
+    option.value = breed.id;
+    //   Each option should display text equal to the name of the breed.
+    option.textContent = breed.name;
+    breedSelect.appendChild(option);
+  });
+  const id = breedSelect.options[0].value;
+  updateCarousel(id);
+}
+// This function should execute immediately.
 document.addEventListener("DOMContentLoaded", (evt) => {
   initialLoad();
 
@@ -66,19 +66,19 @@ console.log(input);
 async function fetchCatData(catBreed) {
   // getting filtered data by Id
   // Retrieve information on the selected breed from the cat API using fetch().
-//  await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=${catBreed}`);
+  //  await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=${catBreed}`);
 
   // return fetch(`https://api.thecatapi.com/v1/breeds/search?q=${catBreed}`)
   return fetch(`https://api.thecatapi.com/v1/breeds/search?q=${catBreed}&attach_image=1`)
-  .then(response => response.json())
-  .then(data => data);
+    .then(response => response.json())
+    .then(data => data);
 }
 function updateCarousel(breed) {
   const carousel = document.querySelector('.carousel');
   const carouselInner = document.getElementById('carouselInner')
   // Each new selection should clear, re-populate, and restart the Carousel.
- Carousel.clear();
- 
+  Carousel.clear();
+
   fetchCatData(breed)
     .then(data => {
       //For each object in the response array, creating a new element for the carousel.
@@ -105,81 +105,26 @@ const breedimgselect = document.getElementById('breedSelect');
 breedimgselect.addEventListener('change', onslectBreed);
 
 //To practice posting data, we'll create a system to "favourite" certain images.
- //This function is used within Carousel.js to add the event listener as items are created.
-const favouriteButton = document.querySelector('.favourite-button');
-favouriteButton.addEventListener('click',favourite(imgID));
+//This function is used within Carousel.js to add the event listener as items are created.
+// const favouriteButton = document.querySelector('.favourite-button');
+// favouriteButton.addEventListener('click', favourite(imgID));
 
-
-// Be creative with how you create DOM elements and HTML.
-// Feel free to edit index.html and styles.css to suit your needs, but be careful!
-// Remember that functionality comes first, but user experience and design are important.
-//Add a call to this function to the end of your initialLoad function above to create the initial carousel.
-
-
-/**
- * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
- */
-/**
- * 
- * 5. Add axios interceptors to log the time between request and response to the console.
- * - Hint: you already have access to code that does this!
- * - Add a console.log statement to indicate when requests begin.
- * - As an added challenge, try to do this on your own without referencing the lesson material.
- */
-
-/**
- * 6. Next, we'll create a progress bar to indicate the request is in progress.
- * - The progressBar element has already been created for you.
- *  - You need only to modify its "width" style property to align with the request progress.
- * - In your request interceptor, set the width of the progressBar element to 0%.
- *  - This is to reset the progress with each request.
- * - Research the axios onDownloadProgress config option.
- * - Create a function "updateProgress" that receives a ProgressEvent object.
- *  - Pass this function to the axios onDownloadProgress config option in your event handler.
- * - console.log your ProgressEvent object within updateProgess, and familiarize yourself with its structure.
- *  - Update the progress of the request using the properties you are given.
- * - Note that we are not downloading a lot of data, so onDownloadProgress will likely only fire
- *   once or twice per request to this API. This is still a concept worth familiarizing yourself
- *   with for future projects.
- */
-
-/**
- * 7. As a final element of progress indication, add the following to your axios interceptors:
- * - In your request interceptor, set the body element's cursor style to "progress."
- * - In your response interceptor, remove the progress cursor style from the body element.
- */
-/**
- 
- * - Post to the cat API's favourites endpoint with the given ID.
- * - The API documentation gives examples of this functionality using fetch(); use Axios!
- * - Add additional logic to this function such that if the image is already favourited,
- *   you delete that favourite using the API, giving this function "toggle" functionality.
- * - You can call this function by clicking on the heart at the top right of any image.
- */
 
 //* 8.To practice posting data, we'll create a system to "favourite" certain images.
 //The skeleton of this function has already been created for you.
 // This is why we use the export keyword for this function.
 export async function favourite(imgId) {
   // your code here
-  
-  console.log("favourite button clicked");
+  const data = {
+    "image_id": imgId,
+    "sub_id": "my-user-1234"
+  };
+  axios.post('https://api.thecatapi.com/v1/favourites', data)
+    .then(response => {
+      console.log('Response:', response.data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
 }
-
-/**
- * 9. Test your favourite() function by creating a getFavourites() function.
- * - Use Axios to get all of your favourites from the cat API.
- * - Clear the carousel and display your favourites when the button is clicked.
- *  - You will have to bind this event listener to getFavouritesBtn yourself.
- *  - Hint: you already have all of the logic built for building a carousel.
- *    If that isn't in its own function, maybe it should be so you don't have to
- *    repeat yourself in this section.
- */
-
-/**
- * 10. Test your site, thoroughly!
- * - What happens when you try to load the Malayan breed?
- *  - If this is working, good job! If not, look for the reason why and fix it!
- * - Test other breeds as well. Not every breed has the same data available, so
- *   your code should account for this.
- */
